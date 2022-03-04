@@ -3,14 +3,14 @@ from wsgiref import simple_server
 import atexit
 import uuid
 import os
-from flask import Flask, session, request, Response, jsonify
+from flask import Flask, session, request, Response, jsonify,render_template
 
 
 app = Flask(__name__)
 
 @app.route('/',methods = ['GET'])
 def home_page():
-    return "Let's see if working or not"
+    return render_template('home.html')
 
 port =int(os.getenv("PORT",5001))
 
