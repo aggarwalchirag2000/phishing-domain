@@ -1,0 +1,10 @@
+{% block head %}
+<title>Add new Data</title>
+{% endblock %}
+
+{% block body %}
+<form action = '/add_data' method = 'POST' enctype="multipart/form-data">
+    <input type ="file" name = "csvfile" required><br>
+    <input type="submit" value = "submit">
+</form>
+{% endblock %}
