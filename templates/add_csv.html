@@ -3,6 +3,8 @@
 {% endblock %}
 
 {% block body %}
+    <a href = "/">Home</a>
+    <a href = "/add_data">Add new data for training</a>
 <form action = '/add_data' method = 'POST' enctype="multipart/form-data">
     <input type ="file" name = "csvfile" required><br>
     <input type="submit" value = "submit">

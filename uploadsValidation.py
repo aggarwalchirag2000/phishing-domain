@@ -11,7 +11,6 @@ class Validation:
         self.jsonn = jsonn
 
 
-
     def save(self):
         try:
             self.file.save(os.path.join(self.name,self.file.filename))
@@ -38,8 +37,8 @@ class Validation:
 
         except ValueError:
             raise ValueError
+
         except Exception:
-            print(Exception)
-            raise Exception
+                raise Exception
 
 

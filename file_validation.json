@@ -20,7 +20,7 @@
     "qty_percent_url" :"integer" ,
     "qty_tld_url" :"integer" ,
     "length_url" :"integer" ,
-    "email_in_url" :"integer",
+    "email_in_url" :"Boolean [0,1]",
 
     "qty_dot_domain" :"integer" ,
     "qty_hyphen_domain" :"integer" ,
@@ -41,8 +41,8 @@
     "qty_percent_domain" :  "integer",
     "qty_vowels_domain" : "integer",
     "domain_length" :  "integer",
-    "domain_in_ip" : "integer",
-    "server_client_domain" :  "integer",
+    "domain_in_ip" : "Boolean [0,1]",
+    "server_client_domain" :  "Boolean [0,1]",
 
 "qty_dot_directory" :  "integer",
 "qty_hyphen_directory" : "integer",
@@ -100,11 +100,11 @@
 "qty_dollar_params" : "integer",
 "qty_percent_params" :  "integer",
 "params_length" : "integer",
-"tld_present_params" :  "integer",
+"tld_present_params" :  "Boolean [0,1]",
 "qty_params" : "integer",
 
 "time_response" :  "integer",
-"domain_spf" : "integer",
+"domain_spf" : "Boolean [0,1]",
 "asn_ip" :  "integer",
 "time_domain_activation" : "integer",
 "time_domain_expiration" :  "integer",
@@ -112,12 +112,12 @@
 "qty_nameservers" :  "integer",
 "qty_mx_servers" : "integer",
 "ttl_hostname" :  "integer",
-"tls_ssl_certificate" : "integer",
+"tls_ssl_certificate" : "Boolean [0,1]",
 "qty_redirects" :  "integer",
-"url_google_index" : "integer",
-"domain_google_index" :  "integer",
-"url_shortened" : "integer",
-"phishing" :  "integer"
+"url_google_index" : "Boolean [0,1]",
+"domain_google_index" :  "Boolean [0,1]",
+"url_shortened" : "Boolean [0,1]",
+"phishing" :  "Boolean [0,1]"
 
 
 
