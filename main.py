@@ -4,9 +4,12 @@ import uuid
 import pandas as pd
 import os
 from flask import Flask, session, request, Response, jsonify,render_template,redirect,url_for,flash,Markup
+import json
+
 from uploadsValidation import Validation
 from json_values import Json_values
-import json
+from prediction import Prediction
+
 
 app = Flask(__name__)
 # app.secret_key = "super secret key"
@@ -37,8 +40,11 @@ def add():
 
             validation = Validation(request.files['csvfile'],'uploads','file_validation.json')
             validation.save()
-            numberofcols,col_name = validation.checkFile()
+            numberofcols,col_name,check = validation.checkFile()
 
+            if(check):
+                strr = "Number of columns are not equal. Number of Columns should be " + str(numberofcols) + '.'
+                return render_template('result_of_add.html',data = strr)
 
             # return redirect(request.url)
 
@@ -54,6 +60,34 @@ def add():
             print("Exception is: ",repr(e))
             # return Response("Error : %s"% Exception)
             return e
+
+@app.route('/predict',methods =['GET','POST'])
+def predict():
+    if(request.method == 'GET'):
+        return render_template('predict.html')
+    elif(request.method == 'POST'):
+        try:
+            validation = Validation(request.files['csvfile'],'predict_uploads','predict_cols_validation.json')
+            validation.save()
+            numberofcols, col_name,check = validation.checkFile()
+
+            if(check):
+                strr = "Number of columns are not equal. Number of Columns should be " + str(numberofcols) + '.'
+                return render_template('result_of_add.html',data = strr)
+            # print(request.files['csvfile'].filename)
+            predict_obj = Prediction(request.files['csvfile'].filename)
+            predict_obj.predict_data()
+
+
+            return render_template('result_of_add.html',data = "Data Has been added and file is validated")
+
+        except (UnicodeDecodeError,TypeError) as x:
+            print("checking")
+            return render_template('result_of_add.html',data = "Please enter a .csv extension")
+        except Exception:
+            print("Exception checking",repr(Exception))
+            render_template('result_of_add.html',data = "Exception")
+
 
 port =int(os.getenv("PORT",5001))
 

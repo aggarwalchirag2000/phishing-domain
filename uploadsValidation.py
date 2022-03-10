@@ -21,24 +21,29 @@ class Validation:
     def checkFile(self):
         try:
             data = pd.read_csv(self.location)
+
             with open(self.jsonn,'r') as f:
                 dic = json.load(f)
                 f.close()
             numberofcols = dic['NumberofColumns']
+
             if(data.shape[1] != numberofcols):
                 os.remove(self.location)
-                raise ValueError("abcd")
+                return numberofcols,"Number of columns are not equal",True
+
+                # raise ValueError("Number of Columns are not equal")
             col_name = dic['col_name']
-            return numberofcols,col_name
+            return numberofcols,col_name,False
 
         except UnicodeDecodeError:
+            print("are we here??22")
             os.remove(self.location)
             raise UnicodeDecodeError
 
         except ValueError:
-            raise ValueError
+            raise ValueError('Number of Columns are not equal')
 
-        except Exception:
-                raise Exception
+        # except Exception:
+        #     raise Exception
 
 
