@@ -3,7 +3,7 @@ import atexit
 import uuid
 import pandas as pd
 import os
-from flask import Flask, session, request, Response, jsonify,render_template,redirect,url_for,flash,Markup
+from flask import Flask, session, request, Response, jsonify, render_template,redirect,url_for,flash,Markup
 import json
 
 from uploadsValidation import Validation
@@ -41,7 +41,7 @@ def add():
             validation = Validation(request.files['csvfile'],'uploads','file_validation.json')
             validation.save()
             numberofcols,col_name,check = validation.checkFile()
-
+            print(col_name)
             if(check):
                 strr = "Number of columns are not equal. Number of Columns should be " + str(numberofcols) + '.'
                 return render_template('result_of_add.html',data = strr)
@@ -61,6 +61,7 @@ def add():
             # return Response("Error : %s"% Exception)
             return e
 
+
 @app.route('/predict',methods =['GET','POST'])
 def predict():
     if(request.method == 'GET'):
@@ -76,8 +77,8 @@ def predict():
                 return render_template('result_of_add.html',data = strr)
             # print(request.files['csvfile'].filename)
             predict_obj = Prediction(request.files['csvfile'].filename)
-            predict_obj.predict_data()
-
+            output_filename = predict_obj.predict_data()
+            print(output_filename)
 
             return render_template('result_of_add.html',data = "Data Has been added and file is validated")
 

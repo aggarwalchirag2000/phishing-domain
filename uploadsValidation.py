@@ -33,6 +33,7 @@ class Validation:
 
                 # raise ValueError("Number of Columns are not equal")
             col_name = dic['col_name']
+            print("Checking passed")
             return numberofcols,col_name,False
 
         except UnicodeDecodeError:
