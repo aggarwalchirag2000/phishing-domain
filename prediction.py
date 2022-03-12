@@ -14,7 +14,7 @@ class Prediction:
         now = datetime.now()
         current = now.strftime("%d-%m-%Y %H%M%S ")
         self.save = './predict_uploads_result/'+current+filename
-        
+
     def predict_data(self):
         try:
             print("Prediction started")
