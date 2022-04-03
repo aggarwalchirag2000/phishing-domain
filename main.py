@@ -1,17 +1,18 @@
 from wsgiref import simple_server
-import atexit
-import uuid
-import pandas as pd
+# import atexit
+# import uuid
+# import pandas as pd
 import os
-from flask import Flask, session, request, Response, jsonify, render_template,redirect,url_for,flash,Markup
+from flask import Flask, session, request, Response, jsonify, render_template,redirect,url_for,flash,Markup,send_file
 import json
 
 from uploadsValidation import Validation
 from json_values import Json_values
-from prediction import Prediction
-
+from prediction import Prediction_from_csv
+from prediction import Prediction_from_link
 
 app = Flask(__name__)
+# file_name = ''
 # app.secret_key = "super secret key"
 
 @app.route('/',methods = ['GET'])
@@ -30,6 +31,9 @@ def cols():
         f.close()
     return render_template('column_details.html',values= values,keys = keys,description = description)
 
+@app.route('/predict_main',methods = ['GET'])
+def prediction_main():
+    return render_template('predict_main.html')
 
 @app.route('/add_data',methods = ['POST','GET'])
 def add():
@@ -48,24 +52,24 @@ def add():
 
             # return redirect(request.url)
 
-            return render_template('result_of_add.html',data = "Data Has been added and file is validated")
+            return render_template('result_of_add.html',data = "Data Has been added and file is validated",check = False)
 
         except (UnicodeDecodeError,TypeError) as x:
             # return Response("Error : %s"% UnicodeDecodeError)
-            return render_template('result_of_add.html',data = "Please enter a .csv extension")
+            return render_template('result_of_add.html',data = "Please enter a .csv extension",check = False)
 
         except ValueError:
-            return render_template('result_of_add.html', data = 'Column are not matching!')
+            return render_template('result_of_add.html', data = 'Column are not matching!',check = False)
         except Exception as e:
             print("Exception is: ",repr(e))
             # return Response("Error : %s"% Exception)
             return e
 
 
-@app.route('/predict',methods =['GET','POST'])
+@app.route('/predict_from_csv',methods =['GET','POST'])
 def predict():
     if(request.method == 'GET'):
-        return render_template('predict.html')
+        return render_template('predict_from_csv.html')
     elif(request.method == 'POST'):
         try:
             validation = Validation(request.files['csvfile'],'predict_uploads','predict_cols_validation.json')
@@ -76,18 +80,41 @@ def predict():
                 strr = "Number of columns are not equal. Number of Columns should be " + str(numberofcols) + '.'
                 return render_template('result_of_add.html',data = strr)
             # print(request.files['csvfile'].filename)
-            predict_obj = Prediction(request.files['csvfile'].filename)
+            predict_obj = Prediction_from_csv(request.files['csvfile'].filename)
+            global output_filename
             output_filename = predict_obj.predict_data()
+            # file_name = output_filename
             print(output_filename)
 
-            return render_template('result_of_add.html',data = "Data Has been added and file is validated")
+            return render_template('result_of_add.html',data = "Data Has been added and file is validated",check = True)
 
         except (UnicodeDecodeError,TypeError) as x:
             print("checking")
-            return render_template('result_of_add.html',data = "Please enter a .csv extension")
+            return render_template('result_of_add.html',data = "Please enter a .csv extension",check = False)
         except Exception:
             print("Exception checking",repr(Exception))
-            render_template('result_of_add.html',data = "Exception")
+            render_template('result_of_add.html',data = "Exception",check = False)
+
+
+@app.route('/predict_from_link',methods = ['GET','POST'])
+def predict_from_link():
+    if(request.method == 'GET'):
+        return render_template('predict_from_link.html')
+    elif(request.method == 'POST'):
+        try:
+            link = request.form.get("link")
+            predict_obj = Prediction_from_link()
+            return render_template('predict_from_link.html')
+
+
+        except Exception as e:
+            print(e)
+
+
+@app.route('/download',methods = ['GET'])
+def download_file():
+    return send_file(output_filename,as_attachment=True)
+
 
 
 port =int(os.getenv("PORT",5001))
