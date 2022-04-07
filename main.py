@@ -110,11 +110,20 @@ def predict_from_link():
         except Exception as e:
             print(e)
 
+@app.route('/checkk',methods = ['GET','POST'])
+def checkk():
+    if(request.method == 'GET'):
+        return render_template('test.html')
+    elif(request.method == 'POST'):
+        validation = Validation(request.files['csvfile'], 'predict_uploads')
+        validation.save()
+        # filename= request.files['csvfile']
+        # filename.save(os.path.join('./predict_uploads/',filename.filename))
+        return render_template('test.html')
 
 @app.route('/download',methods = ['GET'])
 def download_file():
     return send_file(output_filename,as_attachment=True)
-
 
 
 port =int(os.getenv("PORT",5001))

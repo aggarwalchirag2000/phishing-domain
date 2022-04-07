@@ -4,7 +4,7 @@ import os
 import json
 
 class Validation:
-    def __init__(self,file,location,jsonn):
+    def __init__(self,file,location,jsonn = "NULL"):
         self.file = file
         self.name = location
         self.location = "./"+location+"/" + str(file.filename)
