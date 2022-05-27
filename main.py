@@ -1,3 +1,5 @@
+########### NOTE: #####################
+# Install packages from requirements.txt only otherwise it will give version error
 from wsgiref import simple_server
 # import atexit
 # import uuid
@@ -35,35 +37,36 @@ def cols():
 def prediction_main():
     return render_template('predict_main.html')
 
-@app.route('/add_data',methods = ['POST','GET'])
-def add():
-    if(request.method == 'GET'):
-        return render_template('add_csv.html')
-    elif(request.method == 'POST'):
-        try:
-
-            validation = Validation(request.files['csvfile'],'uploads','file_validation.json')
-            validation.save()
-            numberofcols,col_name,check = validation.checkFile()
-            print(col_name)
-            if(check):
-                strr = "Number of columns are not equal. Number of Columns should be " + str(numberofcols) + '.'
-                return render_template('result_of_add.html',data = strr)
-
-            # return redirect(request.url)
-
-            return render_template('result_of_add.html',data = "Data Has been added and file is validated",check = False)
-
-        except (UnicodeDecodeError,TypeError) as x:
-            # return Response("Error : %s"% UnicodeDecodeError)
-            return render_template('result_of_add.html',data = "Please enter a .csv extension",check = False)
-
-        except ValueError:
-            return render_template('result_of_add.html', data = 'Column are not matching!',check = False)
-        except Exception as e:
-            print("Exception is: ",repr(e))
-            # return Response("Error : %s"% Exception)
-            return e
+##################### NO NEED FOR TRAINING OF THE DATA SET AS OF NOW##########################
+# @app.route('/add_data',methods = ['POST','GET'])
+# def add():
+#     if(request.method == 'GET'):
+#         return render_template('add_csv.html')
+#     elif(request.method == 'POST'):
+#         try:
+#
+#             validation = Validation(request.files['csvfile'],'uploads','file_validation.json')
+#             validation.save()
+#             numberofcols,col_name,check = validation.checkFile()
+#             print(col_name)
+#             if(check):
+#                 strr = "Number of columns are not equal. Number of Columns should be " + str(numberofcols) + '.'
+#                 return render_template('result_of_add.html',data = strr)
+#
+#             # return redirect(request.url)
+#
+#             return render_template('result_of_add.html',data = "Data Has been added and file is validated",check = False)
+#
+#         except (UnicodeDecodeError,TypeError) as x:
+#             # return Response("Error : %s"% UnicodeDecodeError)
+#             return render_template('result_of_add.html',data = "Please enter a .csv extension",check = False)
+#
+#         except ValueError:
+#             return render_template('result_of_add.html', data = 'Column are not matching!',check = False)
+#         except Exception as e:
+#             print("Exception is: ",repr(e))
+#             # return Response("Error : %s"% Exception)
+#             return e
 
 
 @app.route('/predict_from_csv',methods =['GET','POST'])
@@ -104,8 +107,13 @@ def predict_from_link():
         try:
             link = request.form.get("link")
             predict_obj = Prediction_from_link(link)
-            predict_obj.predict()
-            return render_template('predict_from_link.html')
+            phishing = predict_obj.predict()
+
+            if (phishing[0] == "4" or phishing[0] == "2" or phishing[0] == "3"):
+                return render_template('result_predict_link.html',result = phishing[0])
+            print("Phishing or not:"+phishing[0])
+
+            return render_template('result_predict_link.html',result = phishing[0])
 
 
         except Exception as e:
@@ -116,9 +124,6 @@ def predict_from_link():
 def download_file():
     return send_file(output_filename,as_attachment=True)
 
-@app.route('/trying',methods = ['GET'])
-def download_file_tryyy():
-    return send_file("link.csv",as_attachment=True)
 
 port =int(os.getenv("PORT",5001))
 

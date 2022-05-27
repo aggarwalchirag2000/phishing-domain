@@ -1,13 +1,65 @@
 {% block head %}
-<title>Phishing Domain</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v4.1.1">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+      body{
+      text-align : center!important
+    </style>
 {% endblock %}
 {% block body %}
-    <a href = "/">Home</a>
-    <a href = "/add_data">Add new data for training</a>
-    <a href = "/columns_details">Columns Details</a>
-    <a href = "/predict_main"> Prediction</a>
-<H1> Just checking if working or not</H1>
 
-<!--<p><link href="/add_csv.html">abc</link> </p>-->
+ <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+  <header class="masthead mb-auto">
+    <div class="inner">
+      <h3 class="masthead-brand">Phishing Domain Detection</h3>
+      <nav class="nav nav-masthead justify-content-center">
+        <a class="nav-link active" href="/">Home</a>
+        <a class="nav-link" href="/columns_details">Columns Details</a>
+        <a class="nav-link" href="/predict_main">Predictions</a>
+      <!--<a class = "nav-link" href="/add_csv.html">abc</a> -->
+  <!--    <a class = "nav-link" href = "/add_data">Add new data for training</a>-->
+      </nav>
+    </div>
+  </header>
+
+  <main role="main" class="inner cover">
+    <h1 class="cover-heading">Phishing Domain Detection</h1>
+    <p class="lead">Phishing is a type of fraud in which an attacker impersonates a reputable company or
+        person in order to get sensitive information such as login credentials or account
+        information via email or other communication channels. Phishing is popular among
+        attackers because it is easier to persuade someone to click a malicious link that appears
+        to be authentic than it is to break through a computer's protection measures.</p>
+    <p class="lead">
+      <a href="/predict_main" class="btn btn-lg btn-secondary">Predict Data</a>
+    </p>
+  </main>
+
+  <footer class="mastfoot mt-auto">
+
+  </footer>
 
 {% endblock %}
+
+
+
