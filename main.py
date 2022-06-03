@@ -23,12 +23,14 @@ def home_page():
 
 @app.route('/columns_details',methods =['GET'])
 def cols():
-    json_values_obj = Json_values('file_validation.json')
+    # json_values_obj = Json_values('cols_details.json')
+    json_values_obj = Json_values('predict_cols_validation.json')
     keys, values,description = json_values_obj.data()
 
     # data = {keys}
     # ,keys,values
-    with open('file_validation.json', 'r') as f:
+    # with open('file_validation.json', 'r') as f:
+    with open('predict_cols_validation.json', 'r') as f:
         dic = json.load(f)
         f.close()
     return render_template('column_details.html',values= values,keys = keys,description = description)
@@ -76,8 +78,10 @@ def predict():
     elif(request.method == 'POST'):
         try:
             validation = Validation(request.files['csvfile'],'predict_uploads','predict_cols_validation.json')
+
             validation.save()
             numberofcols, col_name,check = validation.checkFile()
+            print("num", numberofcols)
 
             if(check):
                 strr = "Number of columns are not equal. Number of Columns should be " + str(numberofcols) + '.'
@@ -108,12 +112,13 @@ def predict_from_link():
             link = request.form.get("link")
             predict_obj = Prediction_from_link(link)
             phishing = predict_obj.predict()
+            print("Phishing or not:" + str(phishing[0]))
 
-            if (phishing[0] == "4" or phishing[0] == "2" or phishing[0] == "3"):
-                return render_template('result_predict_link.html',result = phishing[0])
-            print("Phishing or not:"+phishing[0])
+            # if (phishing[0] == "4" or phishing[0] == "2" or phishing[0] == "3"):
+            #     return render_template('result_predict_link.html',result = str(phishing[0]),link = link)
 
-            return render_template('result_predict_link.html',result = phishing[0])
+
+            return render_template('result_predict_link.html',result = str(phishing[0]),link = link)
 
 
         except Exception as e:
@@ -124,6 +129,10 @@ def predict_from_link():
 def download_file():
     return send_file(output_filename,as_attachment=True)
 
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('404.html')
 
 port =int(os.getenv("PORT",5001))
 

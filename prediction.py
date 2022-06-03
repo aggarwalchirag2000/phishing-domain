@@ -2,7 +2,7 @@ import pandas as pd
 import pickle
 import numpy as np
 from datetime import datetime
-
+import re
 
 # for prediction_from_link class
 import requests
@@ -322,11 +322,12 @@ class Prediction_from_link:
                     count += 1
                 df['qty_mx_servers'] = count
 
-            print("worst")
+            print("Checking last")
 
             redirects = requests.get(self.link)
             df['qty_redirects'] = len(redirects.history)
             return df
+
         except ConnectionError as cen:
             print("Connection")
             return cen
@@ -369,11 +370,19 @@ class Prediction_from_link:
             print("Exception errored in checking the link",e)
             return "3"
 
+    def check_http(self):
+        check = re.findall("https|http",self.link)
+        if(check):
+            return 0
+        else:
+            return 1
 
     def predict(self):
         try:
             print("Prediction from link started")
-
+            checking_http = self.check_http()
+            if(checking_http):
+                return "5"
             test = self.check_link()
             print("test is:", test)
             print(type(test))
@@ -410,7 +419,8 @@ class Prediction_from_link:
             rf_file = './models/link/RandomForest'+str(cluster_df[0]) + '.sav'
             rf_model= pickle.load(open(rf_file,'rb'))
             phishing = rf_model.predict(x_pca)
-
+            print("Phishing")
+            print(phishing)
             return phishing
 
         except Exception as e:
